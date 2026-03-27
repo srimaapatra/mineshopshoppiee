@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MyStore - Flipkart UI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header class="header">
+  <div class="logo">🛒 MyStore</div>
+  <input type="text" id="search" placeholder="Search for products, brands and more" />
+  <div class="nav-right">
+    <button>Login</button>
+    <div class="cart">Cart (<span id="cartCount">0</span>)</div>
+  </div>
+</header>
+<!-- CATEGORY BAR -->
+<div class="category-bar">
+  <span onclick="filterCategory('all')">All</span>
+  <span onclick="filterCategory('Electronics')">Electronics</span>
+  <span onclick="filterCategory('Fashion')">Fashion</span>
+  <span onclick="filterCategory('Home')">Home</span>
+  <span onclick="filterCategory('Books')">Books</span>
+</div>
+
+<div class="main">
+  <!-- SIDEBAR FILTER -->
+  <aside class="sidebar">
+    <h3>Filters</h3>
+
+    <label>Price</label>
+    <select id="priceFilter">
+      <option value="all">All</option>
+      <option value="low">Below ₹1000</option>
+      <option value="mid">₹1000-5000</option>
+      <option value="high">Above ₹5000</option>
+    </select>
+
+    <label>Rating</label>
+    <select id="ratingFilter">
+      <option value="all">All</option>
+      <option value="4">4★ & above</option>
+      <option value="3">3★ & above</option>
+    </select>
+     <label>Sort</label>
+    <select id="sort">
+      <option value="default">Default</option>
+      <option value="low">Price Low → High</option>
+      <option value="high">Price High → Low</option>
+      <option value="rating">Rating</option>
+    </select>
+  </aside>
+
+  <!-- PRODUCTS -->
+  <section class="products">
+    <div id="productList" class="grid"></div>
+  </section>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
+
