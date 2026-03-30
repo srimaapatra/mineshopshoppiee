@@ -1,60 +1,54 @@
-const products = [
-{id:1,name:"Laptop",price:50000,category:"Electronics",rating:4.5,img:"https://via.placeholder.com/200"},
-{id:2,name:"Headphones",price:2000,category:"Electronics",rating:4.2,img:"https://via.placeholder.com/200"},
-{id:3,name:"T-Shirt",price:500,category:"Fashion",rating:3.8,img:"https://via.placeholder.com/200"},
-{id:4,name:"Shoes",price:2500,category:"Fashion",rating:4.1,img:"https://via.placeholder.com/200"},
-{id:5,name:"Sofa",price:15000,category:"Home",rating:4.6,img:"https://via.placeholder.com/200"},
-{id:6,name:"Book",price:300,category:"Books",rating:4.0,img:"https://via.placeholder.com/200"}
+const data=[
+{id:1,name:"HP Laptop",price:50000,category:"Electronics",rating:4.5,img:"https://m.media-amazon.com/images/I/71jG+e7roXL.jpg"},
+{id:2,name:"Boat Headphones",price:2000,category:"Electronics",rating:4.2,img:"https://m.media-amazon.com/images/I/61u1VALn6JL._SL1500_.jpg"},
+{id:3,name:"Nike Shoes",price:3000,category:"Fashion",rating:4.3,img:"https://m.media-amazon.com/images/I/71li-ujtlUL._UY500_.jpg"},
+{id:4,name:"Cotton T-Shirt",price:800,category:"Fashion",rating:3.8,img:"https://m.media-amazon.com/images/I/61y6Vt6+f9L._UY741_.jpg"},
+{id:5,name:"Wooden Chair",price:1500,category:"Home",rating:4.0,img:"https://m.media-amazon.com/images/I/81oN2N6d8UL._SL1500_.jpg"},
+{id:6,name:"Novel Book",price:400,category:"Books",rating:4.6,img:"https://m.media-amazon.com/images/I/81iqZ2HHD-L.jpg"}
 ];
 
-let filteredProducts = [...products];
-let cart = JSON.parse(localStorage.getItem("cart"))||[];
+const products=document.getElementById("products");
 
-function render(){
-  const list=document.getElementById("productList");
-  list.innerHTML="";
-  filteredProducts.forEach(p=>{
-    list.innerHTML+=`
-      <div class="card">
-        <img src="${p.img}">
-        <h3>${p.name}</h3>
-        <p>₹${p.price}</p>
-        <p class="rating">⭐ ${p.rating}</p>
-        <button onclick="addToCart(${p.id})">Add to Cart</button>
-      </div>`;
+function display(items){
+  products.innerHTML="";
+  items.forEach(p=>{
+    products.innerHTML+=`
+    <div class="card">
+      <img src="${p.img}">
+      <h4>${p.name}</h4>
+      <p>₹${p.price}</p>
+      <div class="rating">⭐ ${p.rating}</div>
+      <button>Add to Cart</button>
+    </div>`;
   });
 }
-function filterCategory(cat){
-  filteredProducts = cat==='all'? [...products] : products.filter(p=>p.category===cat);
-  applyFilters();
+
+display(data);
+function filter(){
+  let category=document.getElementById("category").value;
+  let price=document.getElementById("price").value;
+  let rating=document.getElementById("rating").value;
+  let search=document.getElementById("search").value.toLowerCase();
+
+  let filtered=data.filter(p=>
+    (!category||p.category===category)&&
+    (!rating||p.rating>=rating)&&
+    (p.name.toLowerCase().includes(search))&&
+    (!price||
+      (price==="low"&&p.price<1000)||
+      (price==="mid"&&p.price>=1000&&p.price<=10000)||
+      (price==="high"&&p.price>10000)
+    )
+  );
+
+  let sort=document.getElementById("sort").value;
+
+  if(sort==="low") filtered.sort((a,b)=>a.price-b.price);
+  if(sort==="high") filtered.sort((a,b)=>b.price-a.price);
+  if(sort==="rating") filtered.sort((a,b)=>b.rating-a.rating);
+
+  display(filtered);
 }
 
-function applyFilters(){
-  let data=[...filteredProducts];
-
-  const price=document.getElementById("priceFilter").value;
-  const rating=document.getElementById("ratingFilter").value;
-  const sort=document.getElementById("sort").value;
-
-  if(price==='low') data=data.filter(p=>p.price<1000);
-  if(price==='mid') data=data.filter(p=>p.price>=1000&&p.price<=5000);
-  if(price==='high') data=data.filter(p=>p.price>5000);
-
-  if(rating!=='all') data=data.filter(p=>p.rating>=rating);
-
-  if(sort==='low') data.sort((a,b)=>a.price-b.price);
-  if(sort==='high') data.sort((a,b)=>b.price-a.price);
-  if(sort==='rating') data.sort((a,b)=>b.rating-a.rating);
-
-  filteredProducts=data;
-  render();
-}
-function addToCart(id){
-  const item=products.find(p=>p.id===id);
-  cart.push(item);
-  localStorage.setItem("cart",JSON.stringify(cart));
-  document.getElementById("cartCount").innerText=cart.length;
-}
-
-render();
-document.getElementById("cartCount").innerText=cart.length;
+document.querySelectorAll("select,input").forEach(el=>el.addEventListener("change",filter));
+document.getElementById("search").addEventListener("keyup",filter);
